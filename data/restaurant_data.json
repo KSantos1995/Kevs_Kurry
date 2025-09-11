@@ -128,25 +128,25 @@
             "id": 3,
             "items": [
                 {
-                    "id": 22,
+                    "id": 19,
                     "name": "Mango Sticky Rice",
                     "price": 7.99,
                     "in_stock": true
                 },
                 {
-                    "id": 23,
+                    "id": 20,
                     "name": "Fried Banana with Honey",
                     "price": 6.49,
                     "in_stock": true
                 },
                 {
-                    "id": 24,
+                    "id": 21,
                     "name": "Thai Coconut Ice Cream",
                     "price": 5.99,
                     "in_stock": true
                 },
                 {
-                    "id": 25,
+                    "id": 22,
                     "name": "Pumpkin Custard",
                     "price": 6.99,
                     "in_stock": false
