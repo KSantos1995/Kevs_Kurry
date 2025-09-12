@@ -1,5 +1,13 @@
 import json
 
+def update_ids(menu_categories):
+    item_index = 1
+    for i in range(len(menu_categories)): 
+        category_items = menu_categories[i]['items']
+        for item in category_items:
+            item['id'] = item_index 
+            item_index += 1
+
 def load_data(file_path):
     with open(file_path, "r") as file:
         restaurant_data = json.load(file)

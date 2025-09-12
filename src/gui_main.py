@@ -1,8 +1,10 @@
 import customtkinter as ctk
 from options_menu import Options_Menu
-from utils import load_data, save_data, close_program
+from utils import update_ids, load_data, save_data, close_program
 
 class Restaurant_GUI:
+
+    # Constructor for App contentbar and sidebar components
     def __init__(self, root, file_path):
         self.root = root
         self.file_path = file_path
@@ -32,7 +34,8 @@ class Restaurant_GUI:
         # Add option buttons in sidebar
         self.display_options()
         self.show_home()
-
+    
+    # Displays home screen in content frame
     def show_home(self):
         self.clear_content()
         self.welcome_label = ctk.CTkLabel(
@@ -42,7 +45,8 @@ class Restaurant_GUI:
         )
         self.welcome_label.pack(pady=20)
         self.highlight_targets = [self.content_frame]
-
+   
+    # Displays options in sidebar
     def display_options(self):
         for option in self.options_menu.options:
             button = ctk.CTkButton(
@@ -51,12 +55,14 @@ class Restaurant_GUI:
                 command=lambda opt=option: self.handle_option(opt)
             )
             button.pack(pady=5, padx=10, fill="x")
-
+   
+    # Cleans content in content frame when changing options
     def clear_content(self):
         """Remove everything from the content frame."""
         for widget in self.content_frame.winfo_children():
             widget.destroy()
-
+   
+    # Conditional runs after taking in user's chosen option
     def handle_option(self, option):
         menu_categories = self.restaurant_data["menu"]
 
@@ -66,14 +72,18 @@ class Restaurant_GUI:
         elif option["id"] == 2:  # Add Item
             self.show_add_item_form(menu_categories)
 
-        elif option["id"] == 3:  # Save Data
+        elif option["id"] == 3:
+            self.show_remove_item_form(menu_categories)
+
+        elif option["id"] == 4:  # Save Data
             save_data(self.file_path, self.restaurant_data)
             self.highlight_targets_frame()
 
-        elif option["id"] == 4:  # Exit
+        elif option["id"] == 5:  # Exit
             close_program()
-
-    def highlight_targets_frame(self, color="green", duration=300):
+  
+    # Highlights targeted frames when executing save to JSON
+    def highlight_targets_frame(self, color="light green", duration=100):
         original_colors = []
         for target in self.highlight_targets:
             if isinstance(target, ctk.CTkCanvas):
@@ -92,6 +102,7 @@ class Restaurant_GUI:
 
         self.root.after(duration, reset_colors)
 
+    # Option 1: Show Menu Function
     def show_menu(self, menu_categories):
         self.clear_content()
         # Title at top
@@ -156,6 +167,7 @@ class Restaurant_GUI:
                 item_label = ctk.CTkLabel(scroll_frame, text=text, anchor="w", justify="left")
                 item_label.pack(padx=20)
 
+    # Option 2: Show Add Item Form Function
     def show_add_item_form(self, menu_categories):
         self.clear_content()
 
@@ -190,6 +202,7 @@ class Restaurant_GUI:
         submit_btn.pack(pady=10)
         self.highlight_targets = [self.content_frame]
 
+    # Option 2: Execute Add Item Function when Form Data is Given
     def add_item_to_category(self, menu_categories):
         category_name = self.category_var.get()
         new_item_name = self.item_name_entry.get()
@@ -228,11 +241,63 @@ class Restaurant_GUI:
         self.content_frame.after(1500, confirm_label.destroy)
 
         # Update IDs
-        self.options_menu.update_ids(menu_categories)
+        update_ids(menu_categories)
 
+    # Option 3: Show Remove Item Form Function
+    def show_remove_item_form(self, menu_categories):
+        self.clear_content()
+
+        # Adding text header component
+        self.title = ctk.CTkLabel(self.content_frame, text="Remove Menu Item", font=("Arial", 18))
+        self.title.pack(pady=10)
+
+        # Item name
+        self.item_name_entry = ctk.CTkEntry(self.content_frame, placeholder_text="Item To Be Removed")
+        self.item_name_entry.pack(pady=5)
+
+        # Submit button
+        submit_btn = ctk.CTkButton(
+            self.content_frame, 
+            text="Remove Item", 
+            command=lambda: self.remove_item(menu_categories)
+        )
+        submit_btn.pack(pady=10)
+
+    def remove_item(self, menu_categories):
+        self.item_to_be_removed = self.item_name_entry.get()
+        found = False
+
+        for category in self.restaurant_data["menu"]:
+            for item in category["items"]:
+                if self.item_to_be_removed.strip().lower() == item["name"].strip().lower():
+                    category["items"].remove(item)
+                    found = True
+                    break
+            if found:
+                break
+
+        if found:
+            confirm_label = ctk.CTkLabel(
+                self.content_frame, 
+                text=f"{self.item_to_be_removed} removed successfully!", 
+                text_color="green"
+            )
+            confirm_label.pack()
+            self.content_frame.after(1500, confirm_label.destroy)
+            # Update IDs after removal
+            update_ids(self.restaurant_data["menu"])
+
+        else:
+            error_label = ctk.CTkLabel(
+                self.content_frame, 
+                text="Item not found", 
+                text_color="red"
+            )
+            error_label.pack()
+            self.content_frame.after(2000, error_label.destroy)
 
 if __name__ == "__main__":
-    file_path = "../data/restaurant_data.json"
+    file_path = "data/restaurant_data.json"
 
     ctk.set_appearance_mode("System")  
     ctk.set_default_color_theme("blue")  
