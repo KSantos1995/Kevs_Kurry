@@ -1,4 +1,4 @@
-# Restaurant Menu GUI
+# Restaurant Menu GUI (TESTING)
 
 A Python-based graphical user interface (GUI) application for managing a restaurant menu. Built using **CustomTkinter (CTk)**, this program allows users to view menu items, add new items, and save changes to a JSON file. The application emphasizes a responsive and interactive single-window experience with live updates.
 
@@ -6,7 +6,7 @@ A Python-based graphical user interface (GUI) application for managing a restaur
 
 ## Table of Contents
 
-- [Restaurant Menu GUI](#restaurant-menu-gui)
+- [Restaurant Menu GUI (TESTING)](#restaurant-menu-gui-testing)
   - [Table of Contents](#table-of-contents)
   - [Project Structure](#project-structure)
   - [Features](#features)
